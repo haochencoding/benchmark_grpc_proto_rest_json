@@ -29,6 +29,7 @@ def fetch_records(host: str, port: int, count: int, logger) -> None:
     # Overall lifecycle start
     t0 = perf_counter_ns()
 
+    # 1. build request-obj (protobuf message) ------------------------------
     req_pb = pb2.RecordListRequest(count=count)
     headers = {
         "content-type": "application/x-protobuf",
@@ -38,11 +39,12 @@ def fetch_records(host: str, port: int, count: int, logger) -> None:
 
     url = f"http://{host}:{port}/records"
 
-    # Fire request
+    # 2. latency window – serialise right in the call ----------------------
     t_req = perf_counter_ns()
     res = requests.post(url, data=req_pb.SerializeToString(), headers=headers)
     t_res = perf_counter_ns()
 
+    # 3. response / logging -------------------------------------------------
     if res.status_code != 200:
         print(f"Server error: {res.status_code} {res.text}")
         return

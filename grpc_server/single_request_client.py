@@ -31,7 +31,7 @@ def fetch_records(host: str, port: int, count: int, logger) -> None:
     # 1. Timestamp of total-run lifecycle 
     t0 = perf_counter_ns()
 
-    # Build chanenel and stub
+    # 1. set-up channel & stub, build request-obj --------------------------
     opts = [
         ("grpc.max_send_message_length", -1),
         ("grpc.max_receive_message_length", -1)
@@ -40,19 +40,18 @@ def fetch_records(host: str, port: int, count: int, logger) -> None:
     stub = pb2_grpc.TimestreamStub(channel)
 
     # Build protobuf request object
-    request = pb2.RecordListRequest(count=count)
-
-    # gRPC metadata must be a tuple of 2-tuples (key, value)
+    request_pb = pb2.RecordListRequest(count=count)
     meta = (("req-id", req_id),) 
 
+    # 2. latency window – gRPC handles serialisation inside the call -------
     # Timestamp of send the request
     # RPC latency = t_res − t_req
     t_req = perf_counter_ns()
-    response = stub.getRecordListResponse(request, metadata=meta)
-    
+    _response = stub.getRecordListResponse(request_pb, metadata=meta)
     # Time of receiving the response
     t_res = perf_counter_ns()
 
+    # 3. logging -----------------------------------------------------------
     log_client(logger, t0=t0, t_req=t_req, t_res=t_res, req_id=req_id)
     print('Finished')
 

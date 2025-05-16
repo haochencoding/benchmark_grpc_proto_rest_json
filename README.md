@@ -52,19 +52,21 @@ python test_rest_proto_single_request.py
 ```
 
 # Measurement
-| Symbol      | Taken at…                                                                                | **Use these deltas** | Meaning                                                                                                          |
-| ----------- | ---------------------------------------------------------------------------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `t0`        | very first line in the client script                                                     | `t_req − t0`         | **Client-side preparation** (create channel/stub and build the protobuf request).                                |
-| `t_req`     | exactly before the blocking `stub.getRecordListResponse()` call                          | `t_res − t_req`      | **Full RPC latency as seen by the client** (wire time both directions **plus** server work).                     |
-| **`t_in`**  | first line inside the service method on the server                                       | `t_in − t_req`       | **Request-wire latency** (network + server HTTP/2 parsing + deserialization).<br>*Requires synchronised clocks.* |
-| **`t_out`** | callback fired **after** the server has serialised the reply and written status/trailers | `t_out − t_in`       | **Pure server processing time** (your handler + response marshalling).                                           |
-| `t_res`     | first line after the call returns on the client                                          | `t_res − t_out`      | **Response-wire latency** (server→client network + client deserialization).                                      |
+## Unified timestamp map
+| Symbol      | Recorded **where**                                                                         | Exact code line(s) in each variant                                                                                                              | **Use these deltas** | What the delta represents                                                                                                     |
+| ----------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `t0`        | very first statement inside every client function                                          | *all 3*: `t0 = perf_counter_ns()`                                                                                                               | `t_req − t0`         | **Client-side set-up** – create `req_id`, headers, URLs, channel/stub (gRPC) **but not body-serialization**.                  |
+| `t_req`     | immediately **before the blocking I/O call** that hands the request bytes to the runtime   | • **REST-JSON / REST-Proto** → right before `requests.post(…)`  <br>• **gRPC-Proto** → right before `stub.getRecordListResponse(…)`             | `t_res − t_req`      | **Client-observed end-to-end latency** – body-serialization + wire both ways + server work.                                   |
+| **`t_in`**  | first line executed in the server handler                                                  | • **REST-JSON / REST-Proto** → first line of `@app.post("/records")` in FastAPI  <br>• **gRPC-Proto** → first line of `getRecordListResponse()` | `t_in − t_req`       | **Uplink network latency** (client ➜ server) + server framework parse/deserialise overhead.<br>*Needs clock synchronisation.* |
+| **`t_out`** | callback executed **after** the server has serialised the reply and flushed status/headers | • `context.add_done_callback(…)` in gRPC server  <br>• `background_tasks.add_task(log_rpc, …)` in FastAPI servers                               | `t_out − t_in`       | **Pure server time** – your handler logic + response serialisation.                                                           |
+| `t_res`     | first line after the blocking I/O returns on the client                                    | *all 3*: right after `requests.post` / `stub.…` returns                                                                                         | `t_res − t_out`      | **Downlink network latency** (server ➜ client) + client framework parse/deserialise time.                                     |
 
-Common composite metrics
-| Metric                         | Formula         | Comment                                  |
-| ------------------------------ | --------------- | ---------------------------------------- |
-| **Pure server time**           | `t_out − t_in`  | excludes all network overhead.           |
-| **Client-observed round-trip** | `t_res − t_req` | what end-users feel.                     |
-| **End-to-end in-app runtime**  | `t_res − t0`    | entire client function, including setup. |
-| **Network (uplink)**           | `t_in − t_req`  | only valid if clocks are synced.         |
-| **Network (downlink)**         | `t_res − t_out` | idem.                                    |
+
+## Composite metrics (apply to all three protocols)
+| Metric name                    | Formula         | Interpretation                               |
+| ------------------------------ | --------------- | -------------------------------------------- |
+| **Client-observed round-trip** | `t_res − t_req` | What an end-user “feels”.                    |
+| **Pure server processing**     | `t_out − t_in`  | Business logic only – no network.            |
+| **(End-to-End?) Total in-app runtime**       | `t_res − t0`    | Entire client call, including set-up.        |
+| **Uplink latency**             | `t_in − t_req`  | Network + server demux; needs synced clocks. |
+| **Downlink latency**           | `t_res − t_out` | Network + client demux; needs synced clocks. |

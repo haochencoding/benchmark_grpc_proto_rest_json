@@ -21,7 +21,7 @@ from contextlib import suppress
 HOST         = "127.0.0.1"
 PORT         = "50051"
 ITERATIONS   = 50                                   # how many calls per size
-SIZES        = (10)
+SIZES        = (100_000, 1_000_000)
 
 LOG_DIR      = Path("data/single_request")
 SERVER_FILE  = "grpc_server/server.py"
@@ -87,7 +87,7 @@ def main() -> None:
         # ------------------------------------------------------------------ #
         print("🔧  Starting gRPC server …")
         server_proc = start_server(size)
-        time.sleep(5)                                # give it a moment to bind
+        time.sleep(10)                                # give it a moment to bind
 
         try:
             # -------------------------------------------------------------- #
@@ -110,6 +110,8 @@ def main() -> None:
             stop_server(server_proc)
 
     print("\n🏁  All benchmarks finished.")
+    print("\n🏁  Pausing to relieve pressure on memory")
+    time.sleep(10)
 
 
 if __name__ == "__main__":

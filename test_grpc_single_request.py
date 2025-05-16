@@ -3,7 +3,7 @@
 Run one-shot gRPC benchmarks:
 
 * 1, 10, 1 000, 10 000, 100 000 and 1 000 000 records
-* 100 repetitions each
+* 50 repetitions each
 * Separate log pair (server / client) for every record count
 """
 

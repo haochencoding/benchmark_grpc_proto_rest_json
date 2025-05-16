@@ -5,9 +5,9 @@ Unified benchmark runner for gRPC-Proto, REST-Proto and REST-JSON.
 Usage examples
 --------------
 # run with default configs
-python bench.py grpc
-python bench.py rest_proto
-python bench.py rest_json
+python benchmark_single_request.py grpc
+python benchmark_single_request.py rest_proto
+python benchmark_single_request.py rest_json
 
 # override some knobs
 python bench.py rest_json --sizes 1 10 1000 --iterations 20
@@ -56,12 +56,12 @@ CFG = {
 
 def start_server(mode: str, count: int) -> subprocess.Popen:
     cfg = CFG[mode]
-    server_log = LOG_DIR / f"server-{count}-items.jsonl"
+    server_log = f"{LOG_DIR}/{mode}/server-{count}-items.jsonl"
 
     cmd = [
         sys.executable, cfg["server_file"],
         "--host", HOST,
-        "--port", cfg["port"],
+        "--port", str(cfg["port"]),
         "--pool-size", str(count),
         "--logger-name", f"{cfg['logger_prefix']}-server-{count}",
         "--log-file", str(server_log),
@@ -73,12 +73,12 @@ def start_server(mode: str, count: int) -> subprocess.Popen:
 
 def run_client(mode: str, count: int) -> int:
     cfg = CFG[mode]
-    client_log = LOG_DIR / f"client-{count}-items.jsonl"
+    client_log = f"{LOG_DIR}/{mode}/client-{count}-items.jsonl"
 
     cmd = [
         sys.executable, cfg["client_file"],
         "--host", HOST,
-        "--port", cfg["port"],
+        "--port", str(cfg["port"]),
         "--count", str(count),
         "--logger-name", f"{cfg['logger_prefix']}-client-{count}",
         "--log-file", str(client_log),

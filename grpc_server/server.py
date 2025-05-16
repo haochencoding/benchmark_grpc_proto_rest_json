@@ -8,6 +8,7 @@ logging.getLogger("grpc").setLevel(logging.ERROR)  # hide Python-level INFO
 import grpc
 import records_pb2 as pb2
 import records_pb2_grpc as pb2_grpc
+import asyncio
 
 import argparse
 from time import perf_counter_ns
@@ -35,35 +36,41 @@ PROTOTYPE_RECORD = {
 class GrpcServer(pb2_grpc.TimestreamServicer):
     def __init__(self, pool_size: int, logger: logging.Logger):
         self.records = [PROTOTYPE_RECORD.copy() for _ in range(pool_size)]
-        self._log = logger
+        self._logger = logger
         self._pool_size = pool_size
 
-    def getRecordListResponse(
+    async def getRecordListResponse(
         self,
         request: pb2.RecordListRequest,
-        context: grpc.ServicerContext
+        context: grpc.aio.ServicerContext
     ) -> pb2.RecordListResponse:
         t_in = perf_counter_ns()
 
         if request.count > self._pool_size:
-            raise grpc.StatusCode.INVALID_ARGUMENT
+            # In the aio API you abort through the context:
+            await context.abort(grpc.StatusCode.INVALID_ARGUMENT,
+                                "count exceeds pool size")
 
         # Metadata keys are bytes → decode to str, put into dict
         md = {k: v for k, v in context.invocation_metadata()}
         req_id = md.get("req-id")
 
-        context.add_callback(lambda: log_rpc(self._log, t_in=t_in, req_id=req_id))
+        def _log_after_rpc(ctx):
+            # Same body for both APIs
+            log_rpc(self._logger, t_in=t_in, req_id=req_id)
+
+        context.add_done_callback(lambda _: log_rpc())
 
         return pb2.RecordListResponse(records=self.records[:request.count])
 
 
-def serve(host: str, port: int, pool_size: int, logger_name: str, log_file_path: Path):
+async def serve(host: str, port: int, pool_size: int, logger_name: str, log_file_path: Path):
     logger = setup_logger(logger_name, log_file_path)
 
     # gRPC message size limits
     max_msg = 160 * 1024 * 1024
 
-    server = grpc.server(
+    server = grpc.aio.server(
         futures.ThreadPoolExecutor(max_workers=10),
         options=[
             ("grpc.max_send_message_length", max_msg),
@@ -76,9 +83,9 @@ def serve(host: str, port: int, pool_size: int, logger_name: str, log_file_path:
     )
 
     port = server.add_insecure_port(f"{host}:{port}")
-    server.start()
+    await server.start()
     print(f"gRPC server on {host}:{port}")
-    server.wait_for_termination()
+    await server.wait_for_termination()
 
 
 if __name__ == "__main__":
@@ -99,12 +106,12 @@ if __name__ == "__main__":
     args = ap.parse_args()
 
     try:
-        serve(
+        asyncio.run(serve(
             host=args.host,
             port=args.port,
             pool_size=args.pool_size,
             logger_name=args.logger_name,
             log_file_path=args.log_file
-            )
+            ))
     except (KeyboardInterrupt, SystemExit):
         print("Shutting down gRPC server")

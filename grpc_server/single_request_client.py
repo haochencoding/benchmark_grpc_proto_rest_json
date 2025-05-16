@@ -34,8 +34,8 @@ def fetch_records(host: str, port: int, count: int, logger) -> None:
 
     # Build chanenel and stub
     opts = [
-        ("grpc.max_send_message_length", 160 * 1024 * 1024),
-        ("grpc.max_receive_message_length", 160 * 1024 * 1024)
+        ("grpc.max_send_message_length", -1),
+        ("grpc.max_receive_message_length", -1)
     ]
     channel = grpc.insecure_channel(f"{host}:{port}", options=opts)
     stub = pb2_grpc.TimestreamStub(channel)

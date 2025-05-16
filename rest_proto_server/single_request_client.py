@@ -50,8 +50,10 @@ def fetch_records(host: str, port: int, count: int, logger) -> None:
         return
 
     # Decode response (bytes) to a python object
-    resp_pb = pb2.RecordListResponse()
-    resp_pb.ParseFromString(res.content)
+    resp_pb = pb2.RecordListResponse.FromString(res.content)
+
+    # Uncomment the line below to see the print record
+    # print(resp_pb.records[0])
 
     # 3. Measure response time
     # I.e., the time the received object is usable as an object with the client

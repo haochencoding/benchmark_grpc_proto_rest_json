@@ -46,7 +46,10 @@ def fetch_records(host: str, port: int, count: int, logger) -> None:
         return
 
     # Decode from bytes to a python object
-    res.json()   # decode just to assert correctness
+    res_obj = res.json()   # decode just to assert correctness
+
+    # Uncomment the line below to see the print record
+    # print(res_obj['records'][0])
 
     # 3. Measure response time
     # I.e., the time the received object is usable as an object with the client

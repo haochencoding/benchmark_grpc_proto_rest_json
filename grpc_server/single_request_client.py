@@ -48,7 +48,10 @@ def fetch_records(host: str, port: int, count: int, logger) -> None:
     t_req = perf_counter_ns()
 
     # serialisation, posting, receiving response, and decoding response into an object
-    _response = stub.getRecordListResponse(request_pb, metadata=meta)
+    response = stub.getRecordListResponse(request_pb, metadata=meta)
+    
+    # Uncomment the line below to print the first record
+    # print(_response.records[0])
 
     # 3. Measure response time
     # I.e., the time the received object is usable as an object with the client

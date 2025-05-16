@@ -8,12 +8,12 @@ python -m grpc_tools.protoc   -I ./proto   --python_out=./rest_proto_server   --
 
 Start gRPC server
 ```bash
-python grpc_server/server.py --port 50051 --pool-size 1000 --logger-name grpc-server  --log-file data/test-grpc-server.jsonl
+python grpc_server/server.py --port 50051 --pool-size 1000 --logger-name grpc-server  --log-file data/test_grpc_server.jsonl
 ```
 
 Start gRPC client
 ```bash
-python grpc_server/single_request_client.py --host 127.0.0.1 --port 50051 --count 100 --logger-name grpc-client --log-file data/test-grpc-client.jsonl
+python grpc_server/single_request_client.py --host 127.0.0.1 --port 50051 --count 100 --logger-name grpc-client --log-file data/test_grpc_client.jsonl
 ```
 
 gRPC single run test
@@ -23,12 +23,12 @@ python test_grpc_single_request.py
 
 Start rest + protobuf server
 ```bash
-python rest_proto_server/server.py --port 8000 --pool-size 1000 --logger-name rest_proto_server  --log-file data/test-rest-proto-server.jsonl
+python rest_proto_server/server.py --port 8000 --pool-size 1000 --logger-name rest_proto_server  --log-file data/test_rest_proto_server.jsonl
 ```
 
 Start rest + protobuf client
 ```bash
-python rest_proto_server/single_request_client.py --host 127.0.0.1 --port 8000 --count 100 --logger-name rest_proto_server --log-file data/test-rest-proto-client.jsonl
+python rest_proto_server/single_request_client.py --host 127.0.0.1 --port 8000 --count 100 --logger-name rest_proto_server --log-file data/test_test_proto_client.jsonl
 ```
 
 rest + protobuf single run test
@@ -38,7 +38,7 @@ python test_rest_proto_single_request.py
 
 Start rest + json server
 ```bash
-python rest_json_server/server.py --port 8000 --pool-size 1000 --logger-name rest_json_server  --log-file data/test-rest-json-server.jsonl
+python rest_json_server/server.py --port 8000 --pool-size 1000 --logger-name rest_json_server  --log-file data/test_rest_json_server.jsonl
 ```
 
 Start rest + json client

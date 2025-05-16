@@ -45,10 +45,13 @@ def fetch_records(host: str, port: int, count: int, logger) -> None:
 
     # 2. latency window – gRPC handles serialisation inside the call -------
     # Timestamp of send the request
-    # RPC latency = t_res − t_req
     t_req = perf_counter_ns()
+
+    # serialisation, posting, receiving response, and decoding response into an object
     _response = stub.getRecordListResponse(request_pb, metadata=meta)
-    # Time of receiving the response
+
+    # 3. Measure response time
+    # I.e., the time the received object is usable as an object with the client
     t_res = perf_counter_ns()
 
     # 3. logging -----------------------------------------------------------

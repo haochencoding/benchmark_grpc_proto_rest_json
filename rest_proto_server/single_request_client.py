@@ -41,19 +41,23 @@ def fetch_records(host: str, port: int, count: int, logger) -> None:
 
     # 2. latency window – serialise right in the call ----------------------
     t_req = perf_counter_ns()
-    res = requests.post(url, data=req_pb.SerializeToString(), headers=headers)
-    t_res = perf_counter_ns()
 
-    # 3. response / logging -------------------------------------------------
+    # Request serialisation, posting, and receiving response
+    res = requests.post(url, data=req_pb.SerializeToString(), headers=headers)
+
     if res.status_code != 200:
         print(f"Server error: {res.status_code} {res.text}")
         return
 
-    # Decode response to a python object
+    # Decode response (bytes) to a python object
     resp_pb = pb2.RecordListResponse()
     resp_pb.ParseFromString(res.content)
 
-    # Same JSON-lines log schema as the gRPC client
+    # 3. Measure response time
+    # I.e., the time the received object is usable as an object with the client
+    t_res = perf_counter_ns()
+
+    # 3. logging -------------------------------------------------
     log_client(logger, t0=t0, t_req=t_req, t_res=t_res, req_id=req_id)
     print("Finished")
 

@@ -37,15 +37,20 @@ def fetch_records(host: str, port: int, count: int, logger) -> None:
 
     # 2. start latency window – serialisation happens *inside* requests ----
     t_req = perf_counter_ns()
-    res   = requests.post(url, json=request_obj, headers=headers)
-    t_res = perf_counter_ns()
 
-    # 3. handle response / logging -----------------------------------------
+    # Request serialisation, posting, and receiving response
+    res = requests.post(url, json=request_obj, headers=headers)
+    
     if res.status_code != 200:
         print(f"Server error: {res.status_code} {res.text}")
         return
 
+    # Decode from bytes to a python object
     res.json()   # decode just to assert correctness
+
+    # 3. Measure response time
+    # I.e., the time the received object is usable as an object with the client
+    t_res = perf_counter_ns()
 
     log_client(logger, t0=t0, t_req=t_req, t_res=t_res, req_id=req_id)
     print("Finished")

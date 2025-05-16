@@ -16,7 +16,7 @@ import time
 
 BENCH = "benchmark_single_request.py"
 MODES = ["grpc", "rest_proto", "rest_json"]
-PAUSE = 10                                 # seconds
+PAUSE = 30                                 # seconds
 
 
 def main() -> None:

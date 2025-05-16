@@ -21,16 +21,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from utils.logger import setup_logger, log_rpc
-
-PROTOTYPE_RECORD = {
-    "region": "us-east-2",
-    "availability_zone": "us-east-2a",
-    "hostname": "host-WgAuL",
-    "timestamp": "2020-03-18 02:56:02.342000000",
-    "timestamp_unit": "MILLISECONDS",
-    "cpu_utilization": 59.16598729806647,
-    "memory_utilization": 57.18926269056821,
-}
+from utils.constants import PROTOTYPE_RECORD
 
 
 class GrpcServer(pb2_grpc.TimestreamServicer):
@@ -55,11 +46,7 @@ class GrpcServer(pb2_grpc.TimestreamServicer):
         md = {k: v for k, v in context.invocation_metadata()}
         req_id = md.get("req-id")
 
-        def _log_after_rpc(ctx):
-            # Same body for both APIs
-            log_rpc(self._logger, t_in=t_in, req_id=req_id)
-
-        context.add_done_callback(lambda _: log_rpc())
+        context.add_done_callback(lambda _: log_rpc(self._logger, t_in=t_in, req_id=req_id))
 
         return pb2.RecordListResponse(records=self.records[:request.count])
 

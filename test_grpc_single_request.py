@@ -40,6 +40,7 @@ def start_server(count: int) -> subprocess.Popen:
         SERVER_FILE,
         "--host", HOST,
         "--port", PORT,
+        "--pool-size", str(count),
         "--logger-name", f"grpc-server-{count}",
         "--log-file", str(server_log),
     ]

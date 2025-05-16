@@ -25,8 +25,6 @@ PROTOTYPE_RECORD = {
     "memory_utilization": 57.18926269056821,
 }
 
-POOL_SIZE = 1_000_000
-
 
 class GrpcServer(pb2_grpc.TimestreamServicer):
     def __init__(self, pool_size: int, logger: logging.Logger):
@@ -49,7 +47,7 @@ class GrpcServer(pb2_grpc.TimestreamServicer):
         return pb2.RecordListResponse(records=self.records[:request.count])
 
 
-def serve(host, port, logger_name, log_file_path):
+def serve(host: str, port: int, pool_size: int, logger_name: str, log_file_path: Path):
     logger = setup_logger(logger_name, log_file_path)
 
     # gRPC message size limits
@@ -64,7 +62,7 @@ def serve(host, port, logger_name, log_file_path):
     )
 
     pb2_grpc.add_TimestreamServicer_to_server(
-        GrpcServer(POOL_SIZE, logger), server
+        GrpcServer(pool_size, logger), server
     )
 
     port = server.add_insecure_port(f"{host}:{port}")
@@ -77,6 +75,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="Launch the gRPC Timestream server")
     ap.add_argument("--host", default="127.0.0.1", help="Bind address (default: %(default)s)")
     ap.add_argument("--port", type=int, help="Port to listen on")
+    ap.add_argument("--pool-size", type=int, help="Number of prototype records to pre-allocate")
     ap.add_argument(
         "--logger-name",
         help="Name to give the logger instance",
@@ -93,6 +92,7 @@ if __name__ == "__main__":
         asyncio.run(
             serve(host=args.host,
                   port=args.port,
+                  pool_size=args.pool_size,
                   logger_name=args.logger_name,
                   log_file_path=args.log_file)
         )

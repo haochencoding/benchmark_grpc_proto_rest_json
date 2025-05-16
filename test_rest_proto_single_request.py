@@ -23,16 +23,17 @@ PORT         = "8000"
 ITERATIONS   = 50
 SIZES        = (1, 10)
 
-LOG_DIR      = Path("data/single_request")
+LOG_DIR      = Path("data/single_request/rest_proto")
 SERVER_FILE  = "rest_proto_server/server.py"
 CLIENT_FILE  = "rest_proto_server/single_request_client.py"
+LOGGER_PREFIX = 'rest_proto'
 
 # --------------------------------------------------------------------------- #
 # Helpers                                                                     #
 # --------------------------------------------------------------------------- #
 
 def start_server(count: int) -> subprocess.Popen:
-    server_log = LOG_DIR / f"rest-server-{count}-items.jsonl"
+    server_log = LOG_DIR / f"server-{count}-items.jsonl"
 
     cmd = [
         sys.executable,
@@ -40,7 +41,7 @@ def start_server(count: int) -> subprocess.Popen:
         "--host", HOST,
         "--port", PORT,
         "--pool-size", str(count),
-        "--logger-name", f"rest-server-{count}",
+        "--logger-name", f"{LOGGER_PREFIX}-server-{count}",
         "--log-file", str(server_log),
     ]
     # stdout is silenced so the parent process controls console output
@@ -49,7 +50,7 @@ def start_server(count: int) -> subprocess.Popen:
 
 
 def run_client(count: int) -> int:
-    client_log = LOG_DIR / f"rest-client-{count}-items.jsonl"
+    client_log = LOG_DIR / f"client-{count}-items.jsonl"
 
     cmd = [
         sys.executable,
@@ -57,7 +58,7 @@ def run_client(count: int) -> int:
         "--host", HOST,
         "--port", PORT,
         "--count", str(count),
-        "--logger-name", f"rest-client-{count}",
+        "--logger-name", f"{LOGGER_PREFIX}-client-{count}",
         "--log-file", str(client_log),
     ]
     return subprocess.run(cmd).returncode
@@ -81,13 +82,17 @@ def main() -> None:
     for size in SIZES:
         print(f"\n=== {size:_} items · {ITERATIONS} runs ===")
 
-        # 1. Start server ---------------------------------------------------
-        print("🔧  Starting REST + Proto server …")
+        # ------------------------------------------------------------------ #
+        # 1. Start server                                                    #
+        # ------------------------------------------------------------------ #
+        print(f"🔧  Starting {LOGGER_PREFIX} server …")
         server_proc = start_server(size)
         time.sleep(10)                     # give it a moment to bind
 
         try:
-            # 2. Fire client ------------------------------------------------
+            # -------------------------------------------------------------- #
+            # 2. Fire the client ITERATIONS times                            #
+            # -------------------------------------------------------------- #
             for i in range(1, ITERATIONS + 1):
                 print(f"  📥  Run {i:3d}/{ITERATIONS} … ", end="", flush=True)
                 rc = run_client(size)
@@ -96,7 +101,9 @@ def main() -> None:
                     break
                 print("✅")
         finally:
-            # 3. Clean shutdown --------------------------------------------
+            # -------------------------------------------------------------- #
+            # 3. Always tear the server down                                 #
+            # -------------------------------------------------------------- #
             print("🛑  Shutting down server …")
             stop_server(server_proc)
 

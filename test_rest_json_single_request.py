@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Run one-shot gRPC benchmarks:
+Benchmark suite for the REST-JSON implementation.
 
-* 1, 10, 1 000, 10 000, 100 000 and 1 000 000 records
+* 1, 10, 1 000, 10 000, 100 000 and 1 000 000 records (edit SIZES as needed)
 * 50 repetitions each
 * Separate log pair (server / client) for every record count
 """
@@ -18,27 +18,24 @@ from contextlib import suppress
 # Configuration                                                               #
 # --------------------------------------------------------------------------- #
 
-HOST         = "127.0.0.1"
-PORT         = "50051"
-ITERATIONS   = 50                                   # how many calls per size
-SIZES        = (1, 10)
+HOST       = "127.0.0.1"
+PORT       = "8000"
+ITERATIONS = 50
+SIZES      = (1, 10)             # keep tiny for smoke-test; enlarge freely
 
-LOG_DIR      = Path("data/single_request/grpc")
-SERVER_FILE  = "grpc_server/server.py"
-CLIENT_FILE  = "grpc_server/single_request_client.py"
-LOGGER_PREFIX = "grpc"
+LOG_DIR      = Path("data/single_request/rest_json")
+SERVER_FILE  = "rest_json_server/server.py"
+CLIENT_FILE  = "rest_json_server/single_request_client.py"
+LOGGER_PREFIX = 'rest_json'
 
 # --------------------------------------------------------------------------- #
 # Helpers                                                                     #
 # --------------------------------------------------------------------------- #
 
 def start_server(count: int) -> subprocess.Popen:
-    """Launch the gRPC server with its own log file and return the Popen obj."""
     server_log = LOG_DIR / f"server-{count}-items.jsonl"
-
     cmd = [
-        sys.executable,
-        SERVER_FILE,
+        sys.executable, SERVER_FILE,
         "--host", HOST,
         "--port", PORT,
         "--pool-size", str(count),
@@ -48,14 +45,10 @@ def start_server(count: int) -> subprocess.Popen:
     return subprocess.Popen(cmd, stdout=subprocess.DEVNULL,
                             stderr=subprocess.STDOUT)
 
-
 def run_client(count: int) -> int:
-    """Run the client once and return the exit code."""
-    client_log = LOG_DIR / f"client-{count}-items.jsonl"
-
+    client_log = LOG_DIR / f"rest-json-client-{count}-items.jsonl"
     cmd = [
-        sys.executable,
-        CLIENT_FILE,
+        sys.executable, CLIENT_FILE,
         "--host", HOST,
         "--port", PORT,
         "--count", str(count),
@@ -64,20 +57,14 @@ def run_client(count: int) -> int:
     ]
     return subprocess.run(cmd).returncode
 
-
 def stop_server(proc: subprocess.Popen) -> None:
-    """Politely stop the server, killing it if it doesn’t exit in 5 s."""
     proc.send_signal(signal.SIGINT)
     with suppress(subprocess.TimeoutExpired):
         proc.wait(timeout=5)
-    if proc.poll() is None:                          # still running ⟹ kill
+    if proc.poll() is None:
         proc.kill()
 
-
 # --------------------------------------------------------------------------- #
-# Main loop                                                                   #
-# --------------------------------------------------------------------------- #
-
 def main() -> None:
     LOG_DIR.mkdir(exist_ok=True)
 
@@ -89,7 +76,7 @@ def main() -> None:
         # ------------------------------------------------------------------ #
         print(f"🔧  Starting {LOGGER_PREFIX} server …")
         server_proc = start_server(size)
-        time.sleep(10)                                # give it a moment to bind
+        time.sleep(10)
 
         try:
             # -------------------------------------------------------------- #
@@ -102,7 +89,6 @@ def main() -> None:
                     print(f"⚠️  client exit={rc}")
                     break
                 print("✅")
-
         finally:
             # -------------------------------------------------------------- #
             # 3. Always tear the server down                                 #
@@ -111,7 +97,7 @@ def main() -> None:
             stop_server(server_proc)
 
     print("\n🏁  All benchmarks finished.")
-    print("\n🏁  Pausing to relieve pressure on memory")
+    print("\n🏁  Pausing 10 seconds to relieve pressure on memory")
     time.sleep(10)
 
 

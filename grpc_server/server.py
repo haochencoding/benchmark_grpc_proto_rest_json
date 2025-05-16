@@ -1,3 +1,10 @@
+# ── MUST come first ──────────────────────────────────────
+import os
+import logging
+os.environ.setdefault("GRPC_VERBOSITY", "none")   # or "none"
+os.environ.pop("GRPC_TRACE", None)                 # disable tracing
+logging.getLogger("grpc").setLevel(logging.ERROR)  # hide Python-level INFO
+
 import grpc
 import records_pb2 as pb2
 import records_pb2_grpc as pb2_grpc

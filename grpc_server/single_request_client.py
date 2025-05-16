@@ -7,8 +7,10 @@ Usage:
 """
 
 import os
-os.environ.setdefault("GRPC_VERBOSITY", "error")   # only fatal errors
-os.environ.pop("GRPC_TRACE", None)                 # make sure tracing is off
+import logging
+os.environ.setdefault("GRPC_VERBOSITY", "none")   # or "none"
+os.environ.pop("GRPC_TRACE", None)                 # disable tracing
+logging.getLogger("grpc").setLevel(logging.ERROR)  # hide Python-level INFO
 
 import argparse
 import grpc

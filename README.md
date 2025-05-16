@@ -43,7 +43,7 @@ python rest_json_server/server.py --port 8000 --pool-size 1000 --logger-name res
 
 Start rest + json client
 ```bash
-python rest_proto_server/single_request_client.py --host 127.0.0.1 --port 8000 --count 100 --logger-name rest_proto_server --log-file data/test-rest-json-client.jsonl
+python rest_json_server/single_request_client.py --host 127.0.0.1 --port 8000 --count 100 --logger-name rest_json_server --log-file data/test_rest_json_client.jsonl
 ```
 
 rest + json single run test

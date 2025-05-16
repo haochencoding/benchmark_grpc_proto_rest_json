@@ -8,12 +8,12 @@ python -m grpc_tools.protoc   -I ./proto   --python_out=./rest_proto_server   --
 
 Start gRPC server
 ```bash
-python grpc_server/server.py --port 50051 --logger-name grpc-server  --log-file logs/grpc-server
+python grpc_server/server.py --port 50051 --logger-name grpc-server  --log-file data/test-grpc-server.jsonl
 ```
 
 Start gRPC client
 ```bash
-python grpc_server/client.py --host 127.0.0.1 --port 50051 --count 10000 --logger-name grpc-client --log-file logs/grpc-client
+python grpc_server/single_request_client.py --host 127.0.0.1 --port 50051 --count 100 --logger-name grpc-client --log-file data/test-grpc-client.jsonl
 ```
 
 gRPC single run test

@@ -33,7 +33,7 @@ python rest_proto_server/single_request_client.py --host 127.0.0.1 --port 50051 
 
 rest + protobuf single run test
 ```bash
-python test_grpc_single_request.py 
+python test_rest_proto_single_request.py 
 ```
 # Measurement
 | Symbol      | Taken at…                                                                                | **Use these deltas** | Meaning                                                                                                          |

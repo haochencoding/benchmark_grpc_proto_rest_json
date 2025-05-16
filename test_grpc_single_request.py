@@ -21,7 +21,7 @@ from contextlib import suppress
 HOST         = "127.0.0.1"
 PORT         = "50051"
 ITERATIONS   = 50                                   # how many calls per size
-SIZES        = (100_000, 1_000_000)
+SIZES        = (1, 10)
 
 LOG_DIR      = Path("data/single_request")
 SERVER_FILE  = "grpc_server/server.py"

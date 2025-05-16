@@ -10,7 +10,6 @@ import records_pb2 as pb2
 import records_pb2_grpc as pb2_grpc
 
 import argparse
-import asyncio
 from time import perf_counter_ns
 import logging
 from concurrent import futures

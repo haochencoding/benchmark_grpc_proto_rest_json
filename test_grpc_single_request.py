@@ -37,8 +37,7 @@ def start_server(count: int) -> subprocess.Popen:
     server_log = LOG_DIR / f"server-{count}-items.jsonl"
 
     cmd = [
-        sys.executable,
-        SERVER_FILE,
+        sys.executable, SERVER_FILE,
         "--host", HOST,
         "--port", PORT,
         "--pool-size", str(count),

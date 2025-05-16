@@ -48,7 +48,7 @@ python rest_json_server/single_request_client.py --host 127.0.0.1 --port 8000 --
 
 rest + json single run test
 ```bash
-python test_rest_proto_single_request.py 
+python test_rest_json_single_request.py 
 ```
 
 # Measurement

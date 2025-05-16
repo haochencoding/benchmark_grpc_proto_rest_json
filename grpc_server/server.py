@@ -30,6 +30,7 @@ class GrpcServer(pb2_grpc.TimestreamServicer):
     def __init__(self, pool_size: int, logger: logging.Logger):
         self.records = [PROTOTYPE_RECORD.copy() for _ in range(pool_size)]
         self._log = logger
+        self._pool_size = pool_size
 
     def getRecordListResponse(
         self,
@@ -38,10 +39,13 @@ class GrpcServer(pb2_grpc.TimestreamServicer):
     ) -> pb2.RecordListResponse:
         t_in = perf_counter_ns()
 
+        if request.count > self._pool_size:
+            raise grpc.StatusCode.INVALID_ARGUMENT
+
         # Metadata keys are bytes → decode to str, put into dict
         md = {k: v for k, v in context.invocation_metadata()}
         req_id = md.get("req-id")
-        
+
         context.add_callback(lambda: log_rpc(self._log, t_in=t_in, req_id=req_id))
 
         return pb2.RecordListResponse(records=self.records[:request.count])
@@ -89,13 +93,12 @@ if __name__ == "__main__":
     args = ap.parse_args()
 
     try:
-        asyncio.run(
-            serve(host=args.host,
-                  port=args.port,
-                  pool_size=args.pool_size,
-                  logger_name=args.logger_name,
-                  log_file_path=args.log_file)
-        )
-
+        serve(
+            host=args.host,
+            port=args.port,
+            pool_size=args.pool_size,
+            logger_name=args.logger_name,
+            log_file_path=args.log_file
+            )
     except (KeyboardInterrupt, SystemExit):
         print("Shutting down gRPC server")

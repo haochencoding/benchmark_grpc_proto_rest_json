@@ -1,9 +1,6 @@
 """
 Simple client for the Timestream gRPC service.
 Requests a list of records (default: 100) and prints them.
-
-Usage:
-  python fetch_records.py --host 127.0.0.1 --port 50051 --count 100
 """
 
 import os

@@ -100,7 +100,6 @@ def main() -> None:
                     print(f"⚠️  client exit={rc}")
                     break
                 print("✅")
-                time.sleep(0.1) # give server a moment
 
         finally:
             # -------------------------------------------------------------- #

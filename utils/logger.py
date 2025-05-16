@@ -20,7 +20,6 @@ def setup_logger(name: str, log_file_path: str) -> logging.Logger:
         level=logging.INFO,
         format="%(message)s",
         handlers=[
-            logging.StreamHandler(sys.stdout),
             logging.FileHandler(log_file_path)
         ]
     )

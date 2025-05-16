@@ -20,8 +20,8 @@ from contextlib import suppress
 
 HOST         = "127.0.0.1"
 PORT         = "50051"
-ITERATIONS   = 100                                   # how many calls per size
-SIZES        = (1, 10)
+ITERATIONS   = 50                                   # how many calls per size
+SIZES        = (10)
 
 LOG_DIR      = Path("data/single_request")
 SERVER_FILE  = "grpc_server/server.py"
@@ -44,7 +44,7 @@ def start_server(count: int) -> subprocess.Popen:
         "--logger-name", f"grpc-server-{count}",
         "--log-file", str(server_log),
     ]
-    return subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    return subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
 
 def run_client(count: int) -> int:

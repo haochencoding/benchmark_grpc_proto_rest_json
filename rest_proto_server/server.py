@@ -61,7 +61,7 @@ def create_app(pool_size: int, logger: logging.Logger) -> FastAPI:
             raise HTTPException(400, "Requested count exceeds pool size")
 
         # Build response -----------------------------------------------------
-        resp_pb = pb2.RecordListResponse(records[:req_pb.count])
+        resp_pb = pb2.RecordListResponse(records=records[:req_pb.count])
 
         # Log AFTER the response has been sent ------------------------------
         req_id = request.headers.get("req-id")

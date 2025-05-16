@@ -21,6 +21,20 @@ gRPC single run test
 python test_grpc_single_request.py 
 ```
 
+Start rest + protobuf server
+```bash
+python rest_proto_server/server.py --port 50051 --pool-size 1000 --logger-name rest_proto_server  --log-file data/test-rest-proto-server.jsonl
+```
+
+Start rest + protobuf client
+```bash
+python rest_proto_server/single_request_client.py --host 127.0.0.1 --port 50051 --count 100 --logger-name rest_proto_server --log-file data/test-rest-proto-client.jsonl
+```
+
+rest + protobuf single run test
+```bash
+python test_grpc_single_request.py 
+```
 # Measurement
 | Symbol      | Taken at…                                                                                | **Use these deltas** | Meaning                                                                                                          |
 | ----------- | ---------------------------------------------------------------------------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------- |

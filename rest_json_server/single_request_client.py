@@ -40,7 +40,7 @@ def fetch_records(host: str, port: int, count: int, logger) -> None:
 
     # Request serialisation, posting, and receiving response
     res = requests.post(url, json=request_obj, headers=headers)
-    
+
     if res.status_code != 200:
         print(f"Server error: {res.status_code} {res.text}")
         return
@@ -55,10 +55,24 @@ def fetch_records(host: str, port: int, count: int, logger) -> None:
     # I.e., the time the received object is usable as an object with the client
     t_res = perf_counter_ns()
 
-    log_client(logger, t0=t0, t_req=t_req, t_res=t_res, req_id=req_id)
+    # 4. Measure body size after query finish
+    req_size_bytes = len(json.dumps(request_obj).encode("utf-8"))
+    resp_size_bytes = len(res.content)
+
+    log_client(
+        logger,
+        t0=t0,
+        t_req=t_req,
+        t_res=t_res,
+        req_id=req_id,
+        req_size_bytes=req_size_bytes,
+        resp_size_bytes=resp_size_bytes
+    )
+
     print("Finished")
 
-# --------------------------------------------------------------------------- #
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="Fetch records from REST-JSON server")
     ap.add_argument("--host", default="127.0.0.1")

@@ -71,6 +71,7 @@ def convert_jsonl_to_csv_latency(
         "t0", "t_req", "t_res",
         "t_in", "t_out",
         "perf_base_ns", "epoch_base_ns",
+        "req_size_bytes", "res_size_bytes",
     ]
     combined = combined[cols]
 

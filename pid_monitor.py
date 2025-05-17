@@ -18,8 +18,8 @@ import argparse
 import json
 import time
 import psutil
-from time import perf_counter_ns 
-DEFAULT_SAMPLING_INTERVAL = 0.002
+from time import perf_counter_ns
+DEFAULT_SAMPLING_INTERVAL = 0.001
 
 
 def main() -> None:

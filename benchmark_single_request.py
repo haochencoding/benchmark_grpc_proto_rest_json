@@ -23,7 +23,7 @@ from pathlib import Path
 import socket
 
 # --------------------------------------------------------------------------- #
-# Per-variant static configuration                                             #
+# Per-variant static configuration                                            #
 # --------------------------------------------------------------------------- #
 
 LOG_DIR = "data/single_request"

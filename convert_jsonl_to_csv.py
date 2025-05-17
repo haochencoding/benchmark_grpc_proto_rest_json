@@ -15,7 +15,7 @@ def load_jsonl(path: Path) -> pd.DataFrame:
     return pd.read_json(path, lines=True)
 
 
-def convert_all_to_csv_latency(
+def convert_jsonl_to_csv_latency(
     output_file_name: str = "single_request_latency.csv"
 ):
     output_csv = OUTPUT_DATA_DIR / output_file_name
@@ -79,7 +79,7 @@ def convert_all_to_csv_latency(
     print(f"✅  Wrote {len(combined)} rows to {output_csv}")
 
 
-def convert_all_to_csv_usage(
+def convert_jsonl_to_csv_usage(
     usage_side: str = "server",
     output_file_name: str = None
 ):
@@ -161,6 +161,6 @@ def convert_all_to_csv_usage(
 
 
 if __name__ == "__main__":
-    convert_all_to_csv_latency()
-    convert_all_to_csv_usage(usage_side='server')
-    convert_all_to_csv_usage(usage_side='client')
+    convert_jsonl_to_csv_latency()
+    convert_jsonl_to_csv_usage(usage_side='server')
+    convert_jsonl_to_csv_usage(usage_side='client')

@@ -17,7 +17,7 @@ def write_timeline_anchor(file_path: str, mode: str, size: int) -> None:
     epoch_base_ns = time.time_ns()
     Path(file_path).parent.mkdir(parents=True, exist_ok=True)
 
-    with open(file_path, "w") as fh:
+    with open(file_path, "a") as fh:
         json.dump({
             "mode":          mode,
             "size":          size,

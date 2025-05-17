@@ -18,7 +18,7 @@ import argparse
 import json
 import time
 import psutil
-
+from time import perf_counter_ns 
 DEFAULT_SAMPLING_INTERVAL = 0.002
 
 
@@ -37,7 +37,7 @@ def main() -> None:
 
         while proc.is_running():
             try:
-                ts   = time.time()
+                ts   = perf_counter_ns()
                 rss  = proc.memory_info().rss
                 cpu  = proc.cpu_percent(None)   # % since last call
                 fh.write(json.dumps({"ts": ts, "rss": rss, "cpu": cpu}) + "\n")

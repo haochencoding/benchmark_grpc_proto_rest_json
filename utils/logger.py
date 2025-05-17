@@ -34,8 +34,7 @@ def log_rpc(
         log: logging.Logger,
         *,
         t_in: float,
-        req_id: str,
-        res_size_bytes=int
+        req_id: str
         ) -> None:
     t_out = perf_counter_ns()
     log.info(

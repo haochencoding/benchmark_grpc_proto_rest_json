@@ -15,7 +15,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-DEFAULT_RUNNERS = ["run_benchmark_single_request.py"]
+DEFAULT_RUNNERS = ["run_benchmark_single_request.py", "convert_jsonl_to_csv.py"]
 
 
 def main() -> None:

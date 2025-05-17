@@ -1,0 +1,7 @@
+{"mode": "rest_json", "size": 1, "perf_base_ns": 25632824385708, "epoch_base_ns": 1747451761408985000}
+{"mode": "rest_json", "size": 10, "perf_base_ns": 25678298950833, "epoch_base_ns": 1747451806881743000}
+{"mode": "rest_json", "size": 100, "perf_base_ns": 25723767732458, "epoch_base_ns": 1747451852348713000}
+{"mode": "rest_json", "size": 1000, "perf_base_ns": 25769206357250, "epoch_base_ns": 1747451897785526000}
+{"mode": "rest_json", "size": 10000, "perf_base_ns": 25815061434833, "epoch_base_ns": 1747451943638778000}
+{"mode": "rest_json", "size": 100000, "perf_base_ns": 25865176322041, "epoch_base_ns": 1747451993751668000}
+{"mode": "rest_json", "size": 1000000, "perf_base_ns": 25958519026500, "epoch_base_ns": 1747452087090653000}

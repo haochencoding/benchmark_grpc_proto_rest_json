@@ -21,7 +21,7 @@ import time
 from contextlib import suppress
 from pathlib import Path
 import socket
-
+from utils.timeline_anchor import write_timeline_anchor
 # --------------------------------------------------------------------------- #
 # Per-variant static configuration                                            #
 # --------------------------------------------------------------------------- #
@@ -144,9 +144,13 @@ def main() -> None:
               f"({args.mode}) ===")
 
         print(f"🔧  Starting {args.mode} server …")
+
+        # Add a timeanchor to convert perf_base_ns to normal timestamp
+        write_timeline_anchor(f"{log_dir}/time_anchor.jsonl", mode=args.mode, size=size)
+
         server_proc = start_server(args.mode, size)
 
-        monitoring_log = log_dir / f"usage-server-{size}-items.jsonl"
+        monitoring_log = f"{log_dir}/usage-server-{size}-items.jsonl"
         monitoring_proc = subprocess.Popen(
             [sys.executable, "pid_monitor.py", str(server_proc.pid), str(monitoring_log)],
             stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT,

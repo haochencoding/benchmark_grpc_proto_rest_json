@@ -28,8 +28,8 @@ from pathlib import Path
 LOG_DIR = "data/single_request"
 HOST = "127.0.0.1"
 
-DEFAULT_ITERATION = 50
-DEFAULT_SIZES = [1, 10, 100, 1_000, 10_000, 100_000, 1_000_000]
+DEFAULT_ITERATION = 25
+DEFAULT_SIZES = [10_000, 1_000_000]
 DEFAULT_PAUSE_SECONDS = 15
 
 CFG = {
@@ -74,6 +74,7 @@ def start_server(mode: str, count: int) -> subprocess.Popen:
 def run_client(mode: str, count: int) -> int:
     cfg = CFG[mode]
     client_log = f"{LOG_DIR}/{mode}/client-{count}-items.jsonl"
+    client_monitoring_log = f"{LOG_DIR}/{mode}/usage-client-{count}-items.jsonl"
 
     cmd = [
         sys.executable, cfg["client_file"],
@@ -83,7 +84,18 @@ def run_client(mode: str, count: int) -> int:
         "--logger-name", f"{cfg['logger_prefix']}-client-{count}",
         "--log-file", str(client_log),
     ]
-    return subprocess.run(cmd).returncode
+
+    # spawn client + monitor
+    proc = subprocess.Popen(cmd)
+    monitoring_proc = subprocess.Popen(
+        [sys.executable, "pid_monitor.py", str(proc.pid), client_monitoring_log],
+        stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT,
+    )
+
+    rc = proc.wait()
+    monitoring_proc.terminate()
+    monitoring_proc.wait()
+    return rc
 
 
 def stop_server(proc: subprocess.Popen) -> None:
@@ -115,6 +127,13 @@ def main() -> None:
 
         print(f"🔧  Starting {args.mode} server …")
         server_proc = start_server(args.mode, size)
+
+        monitoring_log = log_dir / f"usage-server-{size}-items.jsonl"
+        monitoring_proc = subprocess.Popen(
+            [sys.executable, "pid_monitor.py", str(server_proc.pid), str(monitoring_log)],
+            stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT,
+        )
+
         time.sleep(args.pause)
 
         try:
@@ -129,6 +148,8 @@ def main() -> None:
             print("🛑  Shutting down server …")
             stop_server(server_proc)
             print(f"\n🏁  Pausing {args.pause}s to relieve pressure on memory")
+            monitoring_proc.terminate()
+            monitoring_proc.wait()
             time.sleep(args.pause)
 
     print("\n🏁  All benchmarks finished.")

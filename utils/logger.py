@@ -30,7 +30,13 @@ def setup_logger(name: str, log_file_path: str) -> logging.Logger:
     return log
 
 
-def log_rpc(log: logging.Logger, *, t_in: float, req_id: str) -> None:
+def log_rpc(
+        log: logging.Logger,
+        *,
+        t_in: float,
+        req_id: str,
+        res_size_bytes=int
+        ) -> None:
     t_out = perf_counter_ns()
     log.info(
         json.dumps(
@@ -40,7 +46,16 @@ def log_rpc(log: logging.Logger, *, t_in: float, req_id: str) -> None:
     )
 
 
-def log_client(log: logging.Logger, *, t0: float, t_req: float, t_res: float, req_id: str) -> None:
+def log_client(
+        log: logging.Logger,
+        *,
+        t0: float,
+        t_req: float,
+        t_res: float,
+        req_id: str,
+        req_size_bytes=int,
+        res_size_bytes=int
+        ) -> None:
     log.info(
         json.dumps(
             {"t0": t0, "t_req": t_req, "t_res": t_res, "req_id": req_id},

@@ -73,7 +73,8 @@ python test_rest_json_single_request.py
 | Variable               | Metric                         | Formula           | Interpretation                                                                                     |
 | ---------------------- | ------------------------------ | ----------------- | -------------------------------------------------------------------------------------------------- |
 | `client_setup_ns`      | **Client setup time**         | `t_req − t0`      | Preparation only: create `req_id`, headers/URL, channel  (gRPC), and build the in-memory request object (dict or protobuf). No (de)serialisation or network yet. |
-| `uplink_latency_ns`    | **Uplink latency**             | `t_in − t_req`    | Client→server network + server receive & parse. Requires clock sync, if not on same machine.                                          |
+| `uplink_latency_ns`    | **Uplink latency**             | `t_in − t_req`    | Client→server network + server receive & parse. Requires clock sync, if not on same machine.|
+| `outbound_latency_ns`    | **Outbound latency**             | `t_0 − t_req`    | All client-side prep + network→server. Because in gRPC, the channel is build during client setup, while REST build the conneciton during uplink latency phase. It is unfair to seperate them in comparison.|
 | `server_processing_ns` | **Pure server processing**     | `t_out − t_in`    | Pure server processing time: handler logic + response serialisation, no network. |
 | `downlink_latency_ns`  | **Downlink latency**           | `t_res − t_out`   | server→client network + client framework receive, parse/deserialise. |
 

@@ -59,7 +59,7 @@ def fetch_records(host: str, port: int, count: int, logger) -> None:
 
     # 4. Measure body size after query finish
     req_size_bytes = len(request_pb.SerializeToString())
-    resp_size_bytes = len(response.SerializeToString())
+    res_size_bytes = len(response.SerializeToString())
 
     # 5. logging -----------------------------------------------------------
     log_client(
@@ -69,7 +69,7 @@ def fetch_records(host: str, port: int, count: int, logger) -> None:
         t_res=t_res,
         req_id=req_id,
         req_size_bytes=req_size_bytes,
-        resp_size_bytes=resp_size_bytes
+        res_size_bytes=res_size_bytes
         )
     print('Finished')
 

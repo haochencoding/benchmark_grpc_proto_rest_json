@@ -57,7 +57,7 @@ def fetch_records(host: str, port: int, count: int, logger) -> None:
 
     # 4. Measure body size after query finish
     req_size_bytes = len(json.dumps(request_obj).encode("utf-8"))
-    resp_size_bytes = len(res.content)
+    res_size_bytes = len(res.content)
 
     log_client(
         logger,
@@ -66,7 +66,7 @@ def fetch_records(host: str, port: int, count: int, logger) -> None:
         t_res=t_res,
         req_id=req_id,
         req_size_bytes=req_size_bytes,
-        resp_size_bytes=resp_size_bytes
+        res_size_bytes=res_size_bytes
     )
 
     print("Finished")

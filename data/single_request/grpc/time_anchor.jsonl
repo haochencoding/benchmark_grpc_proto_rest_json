@@ -1,0 +1,7 @@
+{"mode": "grpc", "size": 1, "perf_base_ns": 23706003816083, "epoch_base_ns": 1747449834681835000}
+{"mode": "grpc", "size": 10, "perf_base_ns": 23749650385541, "epoch_base_ns": 1747449878326996000}
+{"mode": "grpc", "size": 100, "perf_base_ns": 23793372940875, "epoch_base_ns": 1747449922048136000}
+{"mode": "grpc", "size": 1000, "perf_base_ns": 23837069416708, "epoch_base_ns": 1747449965743198000}
+{"mode": "grpc", "size": 10000, "perf_base_ns": 23880879077083, "epoch_base_ns": 1747450009551440000}
+{"mode": "grpc", "size": 100000, "perf_base_ns": 23925789172916, "epoch_base_ns": 1747450054460083000}
+{"mode": "grpc", "size": 1000000, "perf_base_ns": 23983090496458, "epoch_base_ns": 1747450111747302000}

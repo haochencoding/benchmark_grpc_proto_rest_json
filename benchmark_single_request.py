@@ -20,6 +20,7 @@ import sys
 import time
 from contextlib import suppress
 from pathlib import Path
+import socket
 
 # --------------------------------------------------------------------------- #
 # Per-variant static configuration                                             #
@@ -28,9 +29,9 @@ from pathlib import Path
 LOG_DIR = "data/single_request"
 HOST = "127.0.0.1"
 
-DEFAULT_ITERATION = 25
-DEFAULT_SIZES = [10_000, 1_000_000]
-DEFAULT_PAUSE_SECONDS = 15
+DEFAULT_ITERATION = 100
+DEFAULT_SIZES = [1, 10, 100, 1_000, 10_000, 100_000, 1_000_000]
+DEFAULT_PAUSE_SECONDS = 30
 
 CFG = {
     "grpc": {
@@ -52,6 +53,23 @@ CFG = {
         "logger_prefix": "rest_json",
     },
 }
+
+
+def wait_for_port(mode: str, timeout: float = 30.0, interval: float = 0.1):
+    """
+    Block until a TCP socket at (host, port) accepts connections, or
+    raise TimeoutError after timeout seconds.
+    """
+    port = CFG[mode]["port"]
+    deadline = time.time() + timeout
+    while True:
+        try:
+            with socket.create_connection((HOST, port), timeout=interval):
+                return
+        except OSError:
+            if time.time() > deadline:
+                raise TimeoutError(f"Timed out waiting for {HOST}:{port}")
+            time.sleep(interval)
 
 
 def start_server(mode: str, count: int) -> subprocess.Popen:
@@ -134,7 +152,7 @@ def main() -> None:
             stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT,
         )
 
-        time.sleep(args.pause)
+        wait_for_port(args.mode)
 
         try:
             for i in range(1, args.iterations + 1):
@@ -147,9 +165,9 @@ def main() -> None:
         finally:
             print("🛑  Shutting down server …")
             stop_server(server_proc)
-            print(f"\n🏁  Pausing {args.pause}s to relieve pressure on memory")
             monitoring_proc.terminate()
             monitoring_proc.wait()
+            print(f"\n🏁  Pausing {args.pause}s before starting the next server")
             time.sleep(args.pause)
 
     print("\n🏁  All benchmarks finished.")

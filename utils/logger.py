@@ -57,7 +57,14 @@ def log_client(
         ) -> None:
     log.info(
         json.dumps(
-            {"t0": t0, "t_req": t_req, "t_res": t_res, "req_id": req_id},
+            {
+                "t0": t0,
+                "t_req": t_req,
+                "t_res": t_res,
+                "req_id": req_id,
+                "req_size_bytes": req_size_bytes,
+                "res_size_bytes": res_size_bytes
+                },
             separators=(",", ":"),
         )
     )

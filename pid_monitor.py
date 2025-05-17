@@ -19,7 +19,7 @@ import json
 import time
 import psutil
 
-DEFAULT_SAMPLING_INTERVAL = 0.02
+DEFAULT_SAMPLING_INTERVAL = 0.002
 
 
 def main() -> None:

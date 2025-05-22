@@ -6,13 +6,13 @@ service Timestream {
 }
 
 message Record {
-  string region = 1;
-  string availability_zone = 2;
-  string hostname = 3;
-  string timestamp = 4;
-  string timestamp_unit = 5;
-  double cpu_utilization = 6;
-  double memory_utilization = 7;
+  string r = 1;
+  string a = 2;
+  string h = 3;
+  string t = 4;
+  string u = 5;
+  double c = 6;
+  double m = 7;
 }
 
 message RecordListRequest {

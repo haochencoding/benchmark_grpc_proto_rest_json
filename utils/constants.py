@@ -1,9 +1,9 @@
 PROTOTYPE_RECORD = {
-    "region": "us-east-2",
-    "availability_zone": "us-east-2a",
-    "hostname": "host-WgAuL",
-    "timestamp": "2020-03-18 02:56:02.342000000",
-    "timestamp_unit": "MILLISECONDS",
-    "cpu_utilization": 59.16598729806647,
-    "memory_utilization": 57.18926269056821,
+    "r": "us-east-2",
+    "a": "us-east-2a",
+    "h": "host-WgAuL",
+    "t": "2020-03-18 02:56:02.342000000",
+    "u": "MILLISECONDS",
+    "c": 59.16598729806647,
+    "m": 57.18926269056821,
 }

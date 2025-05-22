@@ -24,19 +24,19 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rrecords.proto\x12\ntimestream\"\xa5\x01\n\x06Record\x12\x0e\n\x06region\x18\x01 \x01(\t\x12\x19\n\x11\x61vailability_zone\x18\x02 \x01(\t\x12\x10\n\x08hostname\x18\x03 \x01(\t\x12\x11\n\ttimestamp\x18\x04 \x01(\t\x12\x16\n\x0etimestamp_unit\x18\x05 \x01(\t\x12\x17\n\x0f\x63pu_utilization\x18\x06 \x01(\x01\x12\x1a\n\x12memory_utilization\x18\x07 \x01(\x01\"\"\n\x11RecordListRequest\x12\r\n\x05\x63ount\x18\x01 \x01(\r\"9\n\x12RecordListResponse\x12#\n\x07records\x18\x01 \x03(\x0b\x32\x12.timestream.Record2d\n\nTimestream\x12V\n\x15getRecordListResponse\x12\x1d.timestream.RecordListRequest\x1a\x1e.timestream.RecordListResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rrecords.proto\x12\ntimestream\"U\n\x06Record\x12\t\n\x01r\x18\x01 \x01(\t\x12\t\n\x01\x61\x18\x02 \x01(\t\x12\t\n\x01h\x18\x03 \x01(\t\x12\t\n\x01t\x18\x04 \x01(\t\x12\t\n\x01u\x18\x05 \x01(\t\x12\t\n\x01\x63\x18\x06 \x01(\x01\x12\t\n\x01m\x18\x07 \x01(\x01\"\"\n\x11RecordListRequest\x12\r\n\x05\x63ount\x18\x01 \x01(\r\"9\n\x12RecordListResponse\x12#\n\x07records\x18\x01 \x03(\x0b\x32\x12.timestream.Record2d\n\nTimestream\x12V\n\x15getRecordListResponse\x12\x1d.timestream.RecordListRequest\x1a\x1e.timestream.RecordListResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'records_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_RECORD']._serialized_start=30
-  _globals['_RECORD']._serialized_end=195
-  _globals['_RECORDLISTREQUEST']._serialized_start=197
-  _globals['_RECORDLISTREQUEST']._serialized_end=231
-  _globals['_RECORDLISTRESPONSE']._serialized_start=233
-  _globals['_RECORDLISTRESPONSE']._serialized_end=290
-  _globals['_TIMESTREAM']._serialized_start=292
-  _globals['_TIMESTREAM']._serialized_end=392
+  _globals['_RECORD']._serialized_start=29
+  _globals['_RECORD']._serialized_end=114
+  _globals['_RECORDLISTREQUEST']._serialized_start=116
+  _globals['_RECORDLISTREQUEST']._serialized_end=150
+  _globals['_RECORDLISTRESPONSE']._serialized_start=152
+  _globals['_RECORDLISTRESPONSE']._serialized_end=209
+  _globals['_TIMESTREAM']._serialized_start=211
+  _globals['_TIMESTREAM']._serialized_end=311
 # @@protoc_insertion_point(module_scope)

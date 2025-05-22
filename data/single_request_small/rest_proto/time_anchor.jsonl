@@ -1,0 +1,7 @@
+{"mode": "rest_proto", "size": 1, "perf_base_ns": 91362557213209, "epoch_base_ns": 1747938762030118000}
+{"mode": "rest_proto", "size": 10, "perf_base_ns": 91409352241125, "epoch_base_ns": 1747938808795577000}
+{"mode": "rest_proto", "size": 100, "perf_base_ns": 91456090958334, "epoch_base_ns": 1747938855527765000}
+{"mode": "rest_proto", "size": 1000, "perf_base_ns": 91502823707625, "epoch_base_ns": 1747938902260106000}
+{"mode": "rest_proto", "size": 10000, "perf_base_ns": 91549661829250, "epoch_base_ns": 1747938949098121000}
+{"mode": "rest_proto", "size": 100000, "perf_base_ns": 91597856128500, "epoch_base_ns": 1747938997292323000}
+{"mode": "rest_proto", "size": 1000000, "perf_base_ns": 91658006572250, "epoch_base_ns": 1747939057442647000}

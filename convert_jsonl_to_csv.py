@@ -6,8 +6,8 @@ import sys
 import numpy as np
 import pandas as pd
 
-INPUT_DATA_DIR = Path("data/single_request")
-OUTPUT_DATA_DIR = Path("data/single_request")
+INPUT_DATA_DIR = Path("data/single_request_small")
+OUTPUT_DATA_DIR = Path("data/single_request_small")
 ANCHOR_FILE_NAME = "time_anchor.jsonl"
 
 

@@ -26,7 +26,7 @@ from utils.timeline_anchor import write_timeline_anchor
 # Per-variant static configuration                                            #
 # --------------------------------------------------------------------------- #
 
-LOG_DIR = "data/single_request"
+LOG_DIR = "data/single_request_small"
 HOST = "127.0.0.1"
 
 DEFAULT_ITERATION = 100

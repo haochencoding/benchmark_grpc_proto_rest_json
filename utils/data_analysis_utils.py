@@ -2,6 +2,7 @@ import math
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from typing import Union, Sequence
 
 
 def generate_desc_stats(df, col):
@@ -9,6 +10,42 @@ def generate_desc_stats(df, col):
     grouped = df.groupby(['protocol', 'size'])
 
     for (protocol, size), group in grouped:
+        data = group[col].dropna()
+        mean = data.mean()
+        std = data.std()
+        q1 = data.quantile(0.25)
+        q3 = data.quantile(0.75)
+        iqr = q3 - q1
+        min_val = data.min()
+        max_val = data.max()
+        count = data.count()
+
+        summary_records.append({
+            'protocol': protocol,
+            'size': size,
+            'variable': col,
+            'mean': mean,
+            'std': std,
+            'IQR': iqr,
+            'min': min_val,
+            'max': max_val,
+            'count': count
+        })
+
+    # Create a DataFrame for the summary
+    summary_df = pd.DataFrame(summary_records)
+
+    return summary_df
+
+
+def generate_desc_stats_overall(df, col):
+    summary_records = []
+    grouped = df.groupby('protocol')
+
+    for protocol, group in grouped:
+        # total rows in this protocol (including NaNs in col)
+        size = group[col].size
+
         data = group[col].dropna()
         mean = data.mean()
         std = data.std()

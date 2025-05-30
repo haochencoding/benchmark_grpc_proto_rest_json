@@ -91,3 +91,8 @@ python test_rest_json_single_request.py
 0a620a0975732d656173742d32120a75732d656173742d32611a0a686f73742d576741754c221d323032302d30332d31382030323a35363a30322e3334323030303030302a0c4d494c4c495345434f4e4453319a5f60123f954d4039f62b85c239984c40
 ```
 
+####
+Minified JSON
+```
+{"records":[{"region":"us-east-2","availability_zone":"us-east-2a","hostname":"host-WgAuL","timestamp":"2020-03-18 02:56:02.342000000","timestamp_unit":"MILLISECONDS","cpu_utilization":59.16598729806647,"memory_utilization":57.18926269056821}]}
+```

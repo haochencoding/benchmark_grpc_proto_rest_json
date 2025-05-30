@@ -83,3 +83,11 @@ python test_rest_json_single_request.py
 | ---------------------- | ------------------------------ | ----------------- | -------------------------------------------------------------------------------------------------- |
 | `round_trip_ns`        | **Client-observed round-trip** | `t_res − t_req`   | What an end-user experiences: body **serialisation**, network both directions, server work, **deserialisation** of the reply.                                                                     |
 | `total_runtime_ns`     | **Total in-app runtime**       | `t_res − t0`      | Whole client function, including setup.                                                            |
+
+## Response data
+
+#### Binary format in Hex
+```
+0a620a0975732d656173742d32120a75732d656173742d32611a0a686f73742d576741754c221d323032302d30332d31382030323a35363a30322e3334323030303030302a0c4d494c4c495345434f4e4453319a5f60123f954d4039f62b85c239984c40
+```
+
